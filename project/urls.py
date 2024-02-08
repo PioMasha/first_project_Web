@@ -21,7 +21,7 @@ urlpatterns = [
     path('grappelli/', include('grappelli.urls')),
     path('admin/', admin.site.urls),
     path('other/', include('other.urls')),
-    path('shop/', include('store.urls')),
+    path('', include('store.urls')),
     path('login/', include('login.urls')),
     path('api/', include(cart_router.urls)),
 ]
