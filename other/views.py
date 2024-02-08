@@ -11,6 +11,7 @@ class CurrentDateView(View):
         html = f"{datetime.now()}"
         return HttpResponse(html)
 
+
 class IndexView(View):
     def get(self, request):
         return render(request, 'other/index.html')

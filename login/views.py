@@ -28,7 +28,8 @@ class CreateAccountView(View):
 class LoginView(View):
 
     def get(self, request):
-        return render(request, "login/index.html")
+        form = AuthenticationForm()
+        return render(request, "login/index.html", {'form': form})
 
     def post(self, request):
         form = AuthenticationForm(data=request.POST)
@@ -39,7 +40,7 @@ class LoginView(View):
             if user is not None:
                 login(request, user)
                 return redirect('store:shop')
-        return redirect('login:login')
+        return render(request, "login/index.html", {'form': form})
 
 
 class LogoutView(View):

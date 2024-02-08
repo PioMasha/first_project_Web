@@ -29,7 +29,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG') == 'true'
 
-ALLOWED_HOSTS = [host.strip() for host in os.getenv('ALLOWED_COST').split(',')]
+ALLOWED_HOSTS = [host.strip() for host in os.getenv('ALLOWED_HOSTS').split(',')]
 
 
 # Application definition
@@ -87,13 +87,17 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     },
-    'default': {
-       'ENGINE': 'django.db.backends.postgresql',
-       'NAME': os.getenv('NAME_PGDB'),
-       'USER': os.getenv('USER_PGDB'),
-       'PASSWORD': os.getenv('PASSWORD_PGDB'),
-       'HOST': os.getenv('HOST_PGDB'),
-       'PORT': os.getenv('PORT_PGDB'),
+    # 'default': {
+    #    'ENGINE': 'django.db.backends.postgresql',
+    #    'NAME': os.getenv('NAME_PGDB'),
+    #    'USER': os.getenv('USER_PGDB'),
+    #    'PASSWORD': os.getenv('PASSWORD_PGDB'),
+    #    'HOST': os.getenv('HOST_PGDB'),
+    #    'PORT': os.getenv('PORT_PGDB'),
+    # }
+    'test': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': 'test_db.sqlite3',
     }
 }
 
@@ -116,6 +120,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = ['store.backends.CustomAuthBackend',
+                           'django.contrib.auth.backends.ModelBackend']
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
