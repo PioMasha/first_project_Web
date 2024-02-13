@@ -9,11 +9,11 @@ from django.http import HttpResponseNotAllowed, HttpResponseRedirect
 class RemoveFromWishlistView(View):
     def get(self, request, product_id):
         try:
-            product = Product.objects.get(id=product_id)
-        except Product.DoesNotExist:
+            wishlist_item = Wishlist.objects.get(user=request.user, product_id=product_id)
+        except Wishlist.DoesNotExist:
             return redirect('wishlist:wishlist')
 
-        request.user.wishlist.remove(product)
+        wishlist_item.delete()
 
         return redirect('wishlist:wishlist')
 
@@ -21,9 +21,8 @@ class RemoveFromWishlistView(View):
 class WishlistView(View):
     def get(self, request):
         if request.user.is_authenticated:
-            profile = Profile.objects.get(user=request.user)
-            wishlist_products = profile.wishlist.all()
-            return render(request, "wishlist/wishlist.html", {'wishlist_products': wishlist_products})
+            wishlist = Wishlist.objects.filter(user=request.user)
+            return render(request, "wishlist/wishlist.html", {'wishlist': wishlist})
         else:
             return redirect('login:login')
 
@@ -37,10 +36,17 @@ class AddToWishlistView(View):
 
     def post(self, request, product_id):
         print("Received product_id:", product_id)
-        product = get_object_or_404(Product, id=product_id)
-        wishlist, created = Wishlist.objects.get_or_create(user=request.user, product=product)
-        print("HTTP_REFERER:", request.META.get('HTTP_REFERER'))
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+        if request.user.is_authenticated:
+            product = get_object_or_404(Product, id=product_id)
+            wishlist_item = Wishlist.objects.filter(user=request.user, product=product)
+            if wishlist_item.exists():
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+            else:
+                wishlist_item = Wishlist.objects.create(user=request.user, product=product)
+                wishlist_item.save()
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+        else:
+            return HttpResponseRedirect('/login/')
 
     def get(self, request, *args, **kwargs):
         return HttpResponseNotAllowed(['POST'])
