@@ -4,6 +4,10 @@ from django.contrib.auth.decorators import login_required
 from store.models import Product, Profile, Wishlist
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseNotAllowed, HttpResponseRedirect
+from rest_framework.response import Response
+from store.serializers import WishlistSerializer
+from rest_framework import viewsets, response
+from rest_framework.permissions import IsAuthenticated
 
 
 class RemoveFromWishlistView(View):
@@ -50,3 +54,12 @@ class AddToWishlistView(View):
 
     def get(self, request, *args, **kwargs):
         return HttpResponseNotAllowed(['POST'])
+
+
+class WishlistViewSet(viewsets.ModelViewSet):
+    queryset = Wishlist.objects.all()
+    serializer_class = WishlistSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)

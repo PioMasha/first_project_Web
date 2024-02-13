@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from store.urls import router as cart_router
+from wishlist.urls import router as wishlist_router
+
 urlpatterns = [
     path('grappelli/', include('grappelli.urls')),
     path('admin/', admin.site.urls),
@@ -25,4 +27,5 @@ urlpatterns = [
     path('login/', include('login.urls')),
     path('wishlist/', include('wishlist.urls')),
     path('api/', include(cart_router.urls)),
+    path('api/', include(wishlist_router.urls))
 ]

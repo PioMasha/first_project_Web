@@ -4,10 +4,10 @@ from django.db.models import OuterRef, Subquery, F, ExpressionWrapper, DecimalFi
 from django.utils import timezone
 from django.views import View
 from django.http import HttpResponse
-from .models import Product, Category, Discount, Cart
+from .models import Product, Category, Discount, Cart, Wishlist
 from rest_framework import viewsets, response
 from rest_framework.permissions import IsAuthenticated
-from .serializers import CartSerializers
+from .serializers import CartSerializers, WishlistSerializer
 from django.shortcuts import get_object_or_404
 
 
@@ -95,4 +95,5 @@ class ProductSingleView(View):
                           'rating': 5.0,
                           'url': data.image.url,
                       })
+
 

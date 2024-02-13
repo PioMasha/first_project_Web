@@ -1,5 +1,12 @@
 from django.urls import path
-from .views import WishlistView, RemoveFromWishlistView, AddToWishlistView
+from .views import WishlistView, RemoveFromWishlistView, AddToWishlistView, WishlistViewSet
+from rest_framework import routers
+from store.serializers import WishlistSerializer
+
+
+router = routers.DefaultRouter()
+router.register(r'wishlist', WishlistViewSet)
+
 
 app_name = 'wishlist'
 
